@@ -36,10 +36,14 @@ Minimal configuration to host a Django project at Heroku
 - SECRET_KEY=Your$eCretKeyHere (Get this secrety key from the settings.py)
 - DEBUG=True
 
+Os parâmetros não deverão conter espaços ou aspas
+
 ### Settings.py
 * from decouple import config
 * SECRET_KEY = config('SECRET_KEY')
 * DEBUG = config('DEBUG', default=False, cast=bool)
+
+Sobrescrever os valores anteriores por esses valores
 
 ## Configuring the Data Base
 * pip install dj-database-url
@@ -73,7 +77,9 @@ pip freeze > requirements-dev.txt
 * psycopg2
 
 ## Create a file Procfile and add the following code
-* web: gunicorn website.wsgi --log-file -
+* web: gunicorn XXX.wsgi --log-file -
+
+Mudar XXX para o nome do projeto. Ex: website.wsgi
 
 ## Create a file runtime.txt and add the following core
 * python-3.6.0
