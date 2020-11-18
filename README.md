@@ -1,121 +1,143 @@
 # django-heroku
-Minimal configuration to host a Django project at Heroku
+Configuração mínima para hospedar um projeto Django no Heroku
 
-## Create the project directory
-* mkdir directory_name
-* cd directory_name
+## Criar o diretório do projeto
+`mkdir [NOME DA PASTA]`
 
-## Create and activate your virtuanenv
-* virtualenv -p python3 .vEnv
-* . .vEnv/bin/activate
+`cd [NOME DA PASTA]`
 
-## Installing django
-* pip install django
+## Criar e ativar um ambiente virtual
+`python -m venv venv`
 
-## Create the django project
-* django-admin startproject myproject
+`venv/bin/activate`
 
-## Creating the Git repository
+## Instalando o Django
+`pip install django`
+
+## Criar um projeto Django
+`django-admin startproject [NOME DO PROJETO]`
+
+## Criar um repositório Git
 * git init 
-* Create a file called `.gitignore` with the following content:
+* Crie um arquivo chamado `.gitignore` com o seguinte conteúdo:
 ```
-# See the name for you IDE
+# Arquivos da IDE (Pycharm)
 .idea
-# If you are using sqlite3
+# Banco de dados para fins de desenvolvimento
 *.sqlite3
-# Name of your virtuan env
-.vEnv
+# Ambiente virtual
+.venv
 *pyc
 ```
-* git add .
-* git commit -m 'First commit'
+`git add .`
 
-## Hidding instance configuration
-* pip install python-decouple
-* create an .env file at the root path and insert the following variables
-- SECRET_KEY=Your$eCretKeyHere (Get this secrety key from the settings.py)
-- DEBUG=True
+`git commit -m 'First commit'`
 
-Os parâmetros não deverão conter espaços ou aspas
+## Escondendo as configurações
+`pip install python-decouple`
+
+* Criar o arquivo **.env** na pasta raiz e inserir as seguintes variáveis:
+```
+SECRET_KEY=[CHAVE SECRETA - ESTÁ NO ARQUIVO settings.py]
+DEBUG=True
+```
+
+AVISO: Os parâmetros não deverão conter espaços ou aspas
 
 ### Settings.py
-* from decouple import config
-* SECRET_KEY = config('SECRET_KEY')
-* DEBUG = config('DEBUG', default=False, cast=bool)
+`from decouple import config`
+`SECRET_KEY = config('SECRET_KEY')`
+`DEBUG = config('DEBUG', default=False, cast=bool)`
 
 Sobrescrever os valores anteriores por esses valores
 
-## Configuring the Data Base
-* pip install dj-database-url
+## Configurando o banco de dados
+`pip install dj-database-url`
 
 ### Settings.py
-* from dj_database_url import parse as dburl
+`from dj_database_url import parse as dburl`
 
-default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+Adicionar linha antes da variável *DATABASES*
 
-DATABASES = {
+`default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')`
+
+Substituir variável *DATABASES* por:
+
+`DATABASES = {
     'default': config('DATABASE_URL', default=default_dburl, cast=dburl),
-}
+}`
 
 
-## Static files 
-pip install dj-static
+## Arquivos estáticos
+`pip install dj-static`
 
 ### wsgi
-* from dj_static import Cling
-* application = Cling(get_wsgi_application())
+`from dj_static import Cling`
+
+`application = Cling(get_wsgi_application())`
 
 ### Settings.py
-* STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+`STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')`
 
-## Create a requirements-dev.txt
-pip freeze > requirements-dev.txt
+## Crie o arquivo requirements-dev.txt
+`pip freeze > requirements-dev.txt`
 
-## Create a file requirements.txt file and include reference to previows file and add two more requirements
-* -r requirements-dev.txt
-* gunicorn
-* psycopg2
+## Crie o arquivo requirements.txt e referencie o arquivo anterior, além de duas dependências
+```
+-r requirements-dev.txt
+gunicorn
+psycopg2
+```
 
-## Create a file Procfile and add the following code
-* web: gunicorn XXX.wsgi --log-file -
+## Criar o arquivo *Procfile* na raiz e adicionar a seguinte linha
+`web: gunicorn XXX.wsgi --log-file -`
 
 Mudar XXX para o nome do projeto. Ex: website.wsgi
 
-## Create a file runtime.txt and add the following core
+## Criar o arquivo *runtime.txt* na raiz e adicionar a seguinte linha
 * python-3.6.0
 
-## Creating the app at Heroku
-You should install heroku CLI tools in your computer previously ( See http://bit.ly/2jCgJYW ) 
-* heroku apps:create app-name
-Remember to grab the address of the app in this point
+## Criar o app no Heroku
+Você deve instalar o [heroku CLI tools](https://devcenter.heroku.com/articles/heroku-cli) 
 
-## Setting the allowed hosts
-* include your address at the ALLOWED_HOSTS directives in settings.py - Just the domain, make sure that you will take the protocol and slashes from the string
+`heroku apps:create [NOME DO APP]`
 
-## Heroku install config plugin
-* heroku plugins:install heroku-config
+Lembre-se de guardar o endereço do app
 
-### Sending configs from .env to Heroku ( You have to be inside tha folther where .env files is)
-* heroku plugins:install heroku-config
-* heroku config:push -a
+## Configurando os hosts permitidos
+Incluir o endereço do app na variável *ALLOWED_HOSTS* no arquivo *settings.py* - Apenas o domínio, sem protocolos ou barras
 
-### To show heroku configs do
-* heroku config 
+Exemplo:
 
-## Publishing the app
-* git add .
-* git commit -m 'Configuring the app'
-* git push heroku master --force
+`ALLOWED_HOSTS = ['app.herokuapp.com']`
 
-## Creating the data base
-* heroku run python3 manage.py migrate
+## Instalar plugin de configuração do Heroku
+`heroku plugins:install heroku-config`
 
-## Creating the Django admin user
-* heroku run python3 manage.py createsuperuser
+### Enviando configurações do arquivo *.env* para o Heroku (Você deve estar na pasta do arquivo *.env*)
+`heroku plugins:install heroku-config`
+
+`heroku config:push -a [NOME DO APP]`
+
+### Verificar as configurações
+`heroku config`
+
+## Publicando o app
+`git add .`
+
+`git commit -m 'Configuring the app'`
+
+`git push heroku master`
+
+## Criando o banco de dados
+`heroku run python3 manage.py migrate`
+
+## Criando o usuário do Django Admin
+`heroku run python3 manage.py createsuperuser`
 
 ## EXTRAS
-### You may need to disable the collectstatic
-* heroku config:set DISABLE_COLLECTSTATIC=1
+### Você pode precisar desativar o collectstatic
+`heroku config:set DISABLE_COLLECTSTATIC=1`
 
-### Changing a specific configuration
-* heroku config:set DEBUG=True
+### Alterando uma configuração específica
+`heroku config:set DEBUG=True`
