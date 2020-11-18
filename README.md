@@ -46,7 +46,9 @@ AVISO: Os parâmetros não deverão conter espaços ou aspas
 
 ### Settings.py
 `from decouple import config`
+
 `SECRET_KEY = config('SECRET_KEY')`
+
 `DEBUG = config('DEBUG', default=False, cast=bool)`
 
 Sobrescrever os valores anteriores por esses valores
@@ -71,12 +73,12 @@ Substituir variável *DATABASES* por:
 ## Arquivos estáticos
 `pip install dj-static`
 
-### wsgi
+### wsgi.py
 `from dj_static import Cling`
 
 `application = Cling(get_wsgi_application())`
 
-### Settings.py
+### settings.py
 `STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')`
 
 ## Crie o arquivo requirements-dev.txt
