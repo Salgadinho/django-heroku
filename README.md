@@ -18,7 +18,7 @@ Configuração mínima para hospedar um projeto Django no Heroku
 `django-admin startproject [NOME DO PROJETO]`
 
 ## Criar um repositório Git
-* git init 
+`git init`
 * Crie um arquivo chamado `.gitignore` com o seguinte conteúdo:
 ```
 # Arquivos da IDE (Pycharm)
